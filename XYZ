@@ -1,1 +1,268 @@
 Code
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Music Playlist</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+body{background:#0a0a0f;color:#fff;display:flex;}
+
+/* SIDEBAR */
+.sidebar{
+    width:250px;
+    background:#0b0b14;
+    height:100vh;
+    padding:25px;
+    border-right:1px solid rgba(255,255,255,0.08);
+    position:fixed;
+}
+.logo{
+    font-size:22px;
+    font-weight:700;
+    color:#1DB954;
+    margin-bottom:30px;
+}
+.sidebar ul{list-style:none;}
+.sidebar a{
+    text-decoration:none;
+    color:#a1a1a8;
+    display:block;
+    padding:12px;
+    border-radius:10px;
+    transition:.3s;
+    font-size:15px;
+    cursor:pointer;
+}
+.sidebar a:hover, .sidebar a.active{
+    background:#1db95410;
+    color:#1DB954;
+    font-weight:600;
+}
+.sidebar a i{margin-right:10px;}
+
+/* CONTENT */
+.main{
+    margin-left:260px;
+    width:100%;
+    padding:30px;
+}
+h2{margin-bottom:20px;font-weight:600;}
+
+/* SEARCH BAR */
+.search-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:30px;
+}
+.search-box input{
+    flex:1;
+    padding:12px 15px;
+    border-radius:30px;
+    border:none;
+    background:#18181f;
+    color:#fff;
+}
+.search-box button{
+    width:45px;
+    border:none;
+    border-radius:50%;
+    background:#1DB954;
+    cursor:pointer;
+    transition:.3s;
+}
+.search-box button:hover{transform:scale(1.1);}
+
+/* PLAYLIST GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:22px;
+}
+.card{
+    background:#13131c;
+    padding:15px;
+    border-radius:14px;
+    transition:.35s;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+.card:hover{
+    background:#1b1b28;
+    transform:translateY(-4px);
+    box-shadow:0 4px 15px rgba(0,255,120,0.15);
+}
+.card img{
+    width:100%;
+    height:170px;
+    object-fit:cover;
+    border-radius:12px;
+}
+.card h4{margin:10px 0 4px;}
+.card p{color:#a8a8b3;font-size:13px;}
+
+/* SONG LIST */
+.song-list li{
+    padding:12px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    display:flex;
+    justify-content:space-between;
+    cursor:pointer;
+}
+.song-list li:hover{
+    background:#18181f;
+}
+.song-list i{color:#1DB954;margin-right:10px;}
+
+/* BOTTOM MUSIC PLAYER */
+.player-bar{
+    position:fixed;
+    bottom:0;
+    left:250px;
+    width:calc(100% - 250px);
+    background:#0e0e17ea;
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    backdrop-filter:blur(10px);
+    border-top:1px solid rgba(255,255,255,0.15);
+}
+.player-controls i{
+    margin:0 12px;
+    cursor:pointer;
+    font-size:18px;
+    transition:.3s;
+}
+.player-controls i:hover{color:#1DB954;}
+.song-info{font-size:14px;}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="logo">🎵 Neon Playlist</div>
+    <ul>
+        <li><a class="active" onclick="showPage('home')"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a onclick="showPage('search')"><i class="fa-solid fa-search"></i> Search</a></li>
+        <li><a onclick="showPage('liked')"><i class="fa-solid fa-heart"></i> Liked Songs</a></li>
+    </ul>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="main-content">
+
+    <!-- HOME -->
+    <div id="home-page">
+        <h2>Discover Playlists</h2>
+        <div class="grid">
+            <div class="card" onclick="playSong('Chill Vibes','music1.mp3')">
+                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f" alt="">
+                <h4>Chill Vibes</h4>
+                <p>Slow mood beats</p>
+            </div>
+            <div class="card" onclick="playSong('Workout Pump','music2.mp3')">
+                <img src="https://images.unsplash.com/photo-1525286116112-b59af11adad1" alt="">
+                <h4>Workout Pump</h4>
+                <p>Energy booster tracks</p>
+            </div>
+            <div class="card" onclick="playSong('Night Drive','music3.mp3')">
+                <img src="https://images.unsplash.com/photo-1485579149621-3123dd979885" alt="">
+                <h4>Night Drive</h4>
+                <p>Late-night chill</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div id="search-page" style="display:none;">
+        <h2>Search Music</h2>
+        <div class="search-box">
+            <input type="text" placeholder="Search music, artists...">
+            <button><i class="fa fa-search"></i></button>
+        </div>
+        <p style="opacity:0.7;">Try searching for your favorite songs.</p>
+    </div>
+
+    <!-- LIKED SONGS -->
+    <div id="liked-page" style="display:none;">
+        <h2>Liked Songs ❤</h2>
+        <ul class="song-list">
+            <li onclick="playSong('akhiya gulab','akhiya gulab.unknown')"><i class="fa-solid fa-music"></i>akhiya gulab <span>3:22</span></li>
+            <li onclick="playSong('heeriye','heeriye.unknown')"><i class="fa-solid fa-music"></i> heeriye <span>4:08</span></li>
+            <li onclick="playSong('chery chery lady','chery chery lady.unknown')"><i class="fa-solid fa-music"></i> chery chery lady <span>2:55</span></li>
+            <li onclick="playSong('chaleyaa','chaleyaa.unknown')"><i class="fa-solid fa-music"></i>chaleyaa <span>3:22</span></li>
+            <li onclick="playSong('sahiba','sahiba.unknown')"><i class="fa-solid fa-music"></i> sahiba <span>4:08</span></li>
+            <li onclick="playSong('saiyaraa','saiyaraa.unknown')"><i class="fa-solid fa-music"></i> saiyaraa <span>2:55</span></li>
+            <li onclick="playSong('thodi si daru','thodi si daru.unknown')"><i class="fa-solid fa-music"></i>thodi si daru<span>2:55</span></li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- MUSIC PLAYER -->
+<div class="player-bar">
+    <div class="song-info" id="song-info">▶ No song playing</div>
+    <div class="player-controls">
+        <i class="fas fa-step-backward" onclick="prevSong()"></i>
+        <i class="fas fa-play" id="play-btn" onclick="togglePlay()"></i>
+        <i class="fas fa-step-forward" onclick="nextSong()"></i>
+    </div>
+</div>
+
+<audio id="audioPlayer"></audio>
+
+<!-- JAVASCRIPT -->
+<script>
+let currentSong = null;
+let audio = document.getElementById('audioPlayer');
+let info = document.getElementById('song-info');
+let playBtn = document.getElementById('play-btn');
+
+function showPage(page) {
+    document.getElementById('home-page').style.display = "none";
+    document.getElementById('search-page').style.display = "none";
+    document.getElementById('liked-page').style.display = "none";
+    document.getElementById(page + '-page').style.display = "block";
+
+    document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+function playSong(title, src) {
+    currentSong = src;
+    audio.src = src;
+    audio.play();
+    info.textContent = "▶ Playing: " + title;
+    playBtn.classList.replace('fa-play', 'fa-pause');
+}
+
+function togglePlay() {
+    if (!audio.src) return;
+    if (audio.paused) {
+        audio.play();
+        playBtn.classList.replace('fa-play', 'fa-pause');
+    } else {
+        audio.pause();
+        playBtn.classList.replace('fa-pause', 'fa-play');
+    }
+}
+
+function nextSong() {
+    info.textContent = "▶ Next song feature coming soon!";
+}
+
+function prevSong() {
+    info.textContent = "▶ Previous song feature coming soon!";
+}
+</script>
+
+</body>
+</html>
